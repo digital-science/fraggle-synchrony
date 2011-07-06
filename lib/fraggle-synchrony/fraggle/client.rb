@@ -6,7 +6,6 @@ module Fraggle
     alias :arev :rev
 
     def set(rev, path, value)
-      puts "Calling Fiber-aware set"
       f = Fiber.current
       cb = proc { |e, err|
         f.resume(e)
@@ -17,7 +16,6 @@ module Fraggle
     end
 
     def get(rev, path)
-      puts "Calling Fiber-aware get"
       f = Fiber.current
       cb = proc { |e, err|
         f.resume(e)
@@ -28,7 +26,6 @@ module Fraggle
     end
 
     def rev
-      puts "Calling Fiber-aware rev"
       f = Fiber.current
       cb = proc { |e, err|
         f.resume(e)
