@@ -3,25 +3,6 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'fraggle-synchrony'
 require 'eventmachine'
 
-class BadDoozerConnection < EM::Connection
-  def receive_data(data)
-    request = Fraggle::Request.decode(data)
-    response = Fraggle::Response.new
-    response.tag = request.tag
-
-    puts request.inspect
-    unless request.verb == 99 # ACCESS
-      puts "Arse"
-      response.err_code = Fraggle::Response::Err::TAG_IN_USE
-      response.err_detail = "FAIL"
-    end
-
-    data = response.encode
-    head = [data.length].pack("N")
-    send_data("#{head}#{data}")
-  end
-end
-
 class DoozerConnection < EM::Connection
   def receive_data(data)
     request = Fraggle::Request.decode(data)
@@ -42,6 +23,11 @@ class DoozerConnection < EM::Connection
   end
   def __GET__(request, response)
     response.rev = 6
+    response.value = "VALUE"
+    send_response(response)
+  end
+  def __DEL__(request, response)
+    response.rev = 8
     send_response(response)
   end
   def send_response(response)
@@ -64,3 +50,27 @@ class DoozerConnection < EM::Connection
     }[verb]
   end
 end
+
+class BadDoozerConnection < DoozerConnection
+  def __REV__(request, response)
+    response.rev = 2
+    response.err_code = Fraggle::Response::Err::OTHER
+    send_response(response)
+  end
+  def __SET__(request, response)
+    response.rev = 4
+    response.err_code = Fraggle::Response::Err::OTHER
+    send_response(response)
+  end
+  def __GET__(request, response)
+    response.rev = 6
+    response.err_code = Fraggle::Response::Err::OTHER
+    send_response(response)
+  end
+  def __DEL__(request, response)
+    response.rev = 8
+    response.err_code = Fraggle::Response::Err::OTHER
+    send_response(response)
+  end
+end
+

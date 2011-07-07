@@ -8,10 +8,12 @@ module Fraggle
     f = Fiber.current
 
     cb = proc { |client, err|
-      f.resume client
+      f.resume client || err
     }
     self.aconnect(uri, &cb)
 
-    Fiber.yield
+    response = Fiber.yield
+    raise response if response.is_a?(StandardError)
+    response
   end
 end

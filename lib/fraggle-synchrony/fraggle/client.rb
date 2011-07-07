@@ -1,38 +1,23 @@
 module Fraggle
   class Client
 
-    alias :aget :get
-    alias :aset :set
-    alias :arev :rev
+    %w{rev set get del}.each do |cmd|
+      class_eval <<-CODE
+        alias :a#{cmd} :#{cmd}
 
-    def set(rev, path, value)
-      f = Fiber.current
-      cb = proc { |e, err|
-        f.resume(e)
-      }
-      aset(rev, path, value, &cb)
+        def #{cmd}(*args)
+          f = Fiber.current
+          cb = proc { |e, err|
+            f.resume e || err
+          }
+          a#{cmd}(*args, &cb)
 
-      Fiber.yield
+          response = Fiber.yield
+          raise response if response.is_a?(StandardError)
+          response
+        end
+      CODE
     end
 
-    def get(rev, path)
-      f = Fiber.current
-      cb = proc { |e, err|
-        f.resume(e)
-      }
-      aget(rev, path, &cb)
-
-      Fiber.yield
-    end
-
-    def rev
-      f = Fiber.current
-      cb = proc { |e, err|
-        f.resume(e)
-      }
-      arev(&cb)
-
-      Fiber.yield
-    end
   end
 end
