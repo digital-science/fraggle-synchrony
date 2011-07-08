@@ -30,6 +30,11 @@ class DoozerConnection < EM::Connection
     response.rev = 8
     send_response(response)
   end
+  def __STAT__(request, response)
+    response.rev = 10
+    response.value = "STAT"
+    send_response(response)
+  end
   def send_response(response)
     data = response.encode
     head = [data.length].pack("N")

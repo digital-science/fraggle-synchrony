@@ -1,7 +1,7 @@
 module Fraggle
   class Client
 
-    %w{rev set get del}.each do |cmd|
+    %w{rev set get del stat}.each do |cmd|
       class_eval <<-CODE
         alias :a#{cmd} :#{cmd}
 

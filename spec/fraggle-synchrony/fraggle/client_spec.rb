@@ -17,7 +17,7 @@ describe Fraggle::Client do
       initialize_server(BadDoozerConnection)
       client = Fraggle.connect("doozer:?ca=127.0.0.1:9876")
       expect { 
-        client.rev() 
+        client.rev 
       }.to raise_error(Fraggle::Connection::ResponseError)
       EM.stop
     }
@@ -50,6 +50,7 @@ describe Fraggle::Client do
       client = Fraggle.connect("doozer:?ca=127.0.0.1:9876")
       response = client.get(5, "/path")
       response.rev.should == 6
+      response.value.should == "VALUE"
       EM.stop
     }
   end
@@ -86,6 +87,16 @@ describe Fraggle::Client do
     }
   end
 
+  it "should returns stat" do
+    EM.synchrony {
+      initialize_server(DoozerConnection)
+      client = Fraggle.connect("doozer:?ca=127.0.0.1:9876")
+      response = client.stat(9, "/path")
+      response.rev.should == 10
+      response.value.should == "STAT"
+      EM.stop
+    }
+  end
 
   def initialize_server(connection_class)
     EM::start_server "127.0.0.1", 9876, connection_class
