@@ -20,6 +20,11 @@ with
     rev = client.rev
     client.get rev, "/path/to/thing"
 
+The full list of supported commands is: rev, set, get, del, stat
+
+wait is not supported - just use the standard aynch callback mechanism
+provided by Fraggle (a pseudo-blocking wait command makes no sense).
+
 All using Fibers ensuring the code is still fully asynchronous. Pretty
 awesome huh? (bear in mind 99% of the awesomeness is clearly due to Ilya
 Grigorik and his wonderful [em-synchrony](https://github.com/igrigorik/em-synchrony), not me :)
