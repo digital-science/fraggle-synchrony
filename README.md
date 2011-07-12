@@ -10,7 +10,9 @@ reliance on callbacks - wrapping with Synchrony allows you to replace:
 
     Fraggle.connect do |client|
       client.rev do |rev|
-        client.get rev, "/path/to/thing"
+        client.get rev, "/path/to/thing" do |value|
+          # do stuff with value
+        end
       end
     end
 
@@ -18,7 +20,8 @@ with
 
     client = Fraggle.connect
     rev = client.rev
-    client.get rev, "/path/to/thing"
+    value = client.get rev, "/path/to/thing"
+    # do stuff with value
 
 The full list of supported commands is: rev, set, get, del, stat
 
