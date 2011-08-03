@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "fraggle-synchrony/version"
 
 Gem::Specification.new do |s|
-  s.name        = "fraggle-synchrony"
+  s.name        = "fraggle-synchrony-spanx"
   s.version     = Fraggle::Synchrony::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks", "John Griffin"]
