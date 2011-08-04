@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "fraggle-synchrony"
 
-  s.add_dependency "fraggle"
+  s.add_dependency "fraggle-spanx"
   s.add_dependency "em-synchrony"
 
   s.add_development_dependency "rake", ">= 0.8.7"
